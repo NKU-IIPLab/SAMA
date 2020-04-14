@@ -23,24 +23,21 @@ print(" " * 10 + "SAMA model" + "\n<" + "=" * 30 + ">")
 def parse_args():
     # dir
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, conflict_handler="resolve")
-    parser.add_argument("--root_dir", type=str, default="/home/ramon/datasets/NE/hashtag/preprocessed")
-    parser.add_argument("--dataset", type=str, default="2011")
-    parser.add_argument("--results_dir", help="the results dir (embeddings)", type=str, default="results")
-    parser.add_argument("--models_dir", help="the saved models dir", type=str, default="models")
-    parser.add_argument("--model_name", type=str, default="hashtag2vec")
-    # data
-    parser.add_argument("--edgelist", type=str, default="edgelist.pkl")    # 4种
-    parser.add_argument("--empirical", type=str, default="empirical.pkl")   # 也是提前构造好的四种
-    parser.add_argument("--test_ratio", type=float, default=0.2)     # for downstream task
+    parser.add_argument("--root_dir", type=str, default="/home/rleating/datasets/SAMA")
+    parser.add_argument("--models_dir", help="the saved models dir", type=str, default="pretrained_models")
+    parser.add_argument("--model_name", type=str, default="SAMA")
     # optimizer
     parser.add_argument("--lr", type=float, default=1e-3)
-    parser.add_argument("--epoch_num", type=int, default=20)
+    parser.add_argument("--epoch_num", type=int, default=15)
+    parser.add_argument("--batch_size", type=int, default=5)
     # network parameters
-    parser.add_argument("--dim", help="the dimention of the embedding", type=int, default=50)
+    parser.add_argument("--hiddendim", help="the dimention of the embedding", type=int, default=400)
+    parser.add_argument("--worddim", help="the dimention of the word embedding", type=int, default=100)
     parser.add_argument("--device", type=int, default=1)
-    parser.add_argument("--window_size", type=int, default=5)    # deepwalk的参数
-    parser.add_argument("--walks_node", type=int, default=30)
-    parser.add_argument("--walk_len", type=int, default=40)
+    parser.add_argument("--max_len_skill", type=int, default=30)
+    parser.add_argument("--max_len_req", type=int, default=150)
+    parser.add_argument("--lambda", type=float, default=0.5)
+    parser.add_argument("--mu", type=float, default=1.4)
     config = parser.parse_args()
     return config
 
@@ -51,4 +48,3 @@ def main(args):
 
 if __name__ == "__main__":
     main(parse_args())
-
