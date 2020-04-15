@@ -1,4 +1,5 @@
 # coding: utf-8
+# coding: utf-8
 import os
 import gc
 import time
@@ -27,8 +28,6 @@ def parse_args():
     parser.add_argument("--models_dir", help="the pretrained models dir", type=str, default="pretrained_models")
     parser.add_argument("--model_name", type=str, default="pretrained_SAMA")
     # optimizer
-    parser.add_argument("--lr", type=float, default=1e-3)
-    parser.add_argument("--epoch_num", type=int, default=15)
     parser.add_argument("--batch_size", type=int, default=5)
     # network parameters
     parser.add_argument("--hiddendim", help="the dimention of the embedding", type=int, default=400)
@@ -43,15 +42,11 @@ def parse_args():
 
 
 def main(args):
+    pretrained_models_path = os.path.join(args.root_dir, args.models_dir, args.model_name)
     dc = DataCenter(args)
     dc.load_dataset()
     model = SAMA(dc, args)
-    optim = torch.optim.Adam(model.parameters(), lr=args.lr)
-    param_count = 0   # counting the parameters
-    for param in model.parameters():
-        param_count += param.view(-1).size()[0]
-    print('total number of parameters of complete model: %d\n' % param_count)
-    start = time.time()
+    model.load_state_dict(torch.load(pretrained_models_path))
 
 
 
