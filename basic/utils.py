@@ -20,7 +20,7 @@ class dataPreprocess(object):
         else: print("error key for dataProcess!!")
 
 
-class vocab:
+class vocab(object):
     def __init__(self):
         self.id2word, self.word2id = {}, {}
 
@@ -39,7 +39,7 @@ class vocab:
             self.id2word[str(len(self.id2word))] = word
 
 
-class globalVocab:
+class globalVocab(object):
     def __init__(self):
         self.src_vocab = vocab()
         self.skilltgt_vocab = vocab()

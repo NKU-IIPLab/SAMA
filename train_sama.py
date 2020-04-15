@@ -8,7 +8,8 @@ from basic.datacenter import DataCenter
 import torch
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from model.sama import SAMA
-from basic.utils import around
+from basic.utils import around, dataPreprocess, vocab, globalVocab
+from tqdm import tqdm
 
 
 seed = 50   # set seed for reproduction
@@ -17,7 +18,6 @@ torch.cuda.manual_seed_all(seed)
 np.random.seed(seed)
 random.seed(seed)
 torch.backends.cudnn.deterministic = True
-print(" " * 10 + "SAMA model" + "\n<" + "=" * 30 + ">")
 
 
 def parse_args():
@@ -45,15 +45,36 @@ def parse_args():
 def main(args):
     dc = DataCenter(args)
     dc.load_dataset()
-    model = SAMA(dc, args)
+    model = SAMA(dc, args)   # the model part
     optim = torch.optim.Adam(model.parameters(), lr=args.lr)
     param_count = 0   # counting the parameters
     for param in model.parameters():
         param_count += param.view(-1).size()[0]
     print('total number of parameters of complete model: %d\n' % param_count)
     start = time.time()
+    # training
+    for e in range(args.epoch_num):
+        train_batches = dc.get_batches(getattr(dc, "trainset"))  # get all the batches for training
+        avg_loss = []
+        model.train()
+        with tqdm(total=len(train_batches)) as t:
+            for train_batch in train_batches:
+                model.zero_grad()
+                t.set_description("EPOCH [{}]".format(e))
+                loss = model.loss(train_batch)
+                loss.backward()
+                t.set_postfix(loss=loss.item())
+                optim.step()
+                avg_loss.append(loss.item())
+                t.update()
+        print("FINISHED training EPOCH [{} / {}], cost [{}] mins."
+              .format(e, np.mean(avg_loss), around((time.time() - start) / 60)))
 
+        # evaluating
+        avg_loss.clear()
+        gc.collect()
 
 
 if __name__ == "__main__":
+    print(" " * 10 + "SAMA model" + "\n<" + "=" * 30 + ">")
     main(parse_args())
