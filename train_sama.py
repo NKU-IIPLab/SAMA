@@ -33,6 +33,8 @@ def parse_args():
     # network parameters
     parser.add_argument("--hiddendim", help="the dimention of the embedding", type=int, default=400)
     parser.add_argument("--worddim", help="the dimention of the word embedding", type=int, default=100)
+    parser.add_argument("--enc_layers", help="the layers of the encoder", type=int, default=1)
+    parser.add_argument("--dropout", help="the dropout rate", type=float, default=0.3)
     parser.add_argument("--device", type=int, default=1)
     parser.add_argument("--max_len_skill", type=int, default=30)
     parser.add_argument("--max_len_req", type=int, default=150)
@@ -46,6 +48,7 @@ def main(args):
     dc = DataCenter(args)
     dc.load_dataset()
     model = SAMA(dc, args)   # the model part
+    train_batches = dc.get_batches(getattr(dc, "trainset"))  # get all the batches for training
     optim = torch.optim.Adam(model.parameters(), lr=args.lr)
     param_count = 0   # counting the parameters
     for param in model.parameters():

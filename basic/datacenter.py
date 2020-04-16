@@ -21,8 +21,9 @@ class DataCenter(object):
         tgt_embedding, tgt_unknown_count = self.build_pretrain_embedding(vocabset, "tgt")
         print("Finished loading src and tgt pretrained embeddings \nUnknown word count(src/tgt) : [{}/{}]"
               .format(src_unknown_count, tgt_unknown_count))
+        src_embedding, tgt_embedding = torch.Tensor(src_embedding), torch.Tensor(tgt_embedding)
         setattr(self, "src_embedding", src_embedding), setattr(self, "tgt_embedding", tgt_embedding)
-        setattr(self, "trainset", trainset), setattr(self, "testset", testset)
+        setattr(self, "trainset", trainset), setattr(self, "testset", testset), setattr(self, "vocabset", vocabset)
 
     def build_pretrain_embedding(self, vocab, thetype):
         """
@@ -56,8 +57,7 @@ class DataCenter(object):
         :return: all the batches (CPU device)
         """
         random.shuffle(dataset)
-        srcs_list, tgts_list, skilltgt_list, skillnet_list = [], [], [], []
-        src_lens_list, tgt_lens_list, stgt_lens_list, snet_lens_list = [], [], [], []
+        all_batches = []
         bs, datalen = self.config.batch_size, len(dataset)
         batch_num = datalen // bs if datalen % bs == 0 else datalen // bs + 1
         for batch_id in range(batch_num):
@@ -66,12 +66,8 @@ class DataCenter(object):
             if end > datalen:  # the last batch
                 end = datalen
             batch_data = dataset[start: end]
-            thebatch = self.make_batch(batch_data)
-            srcs_list.append(thebatch[0]), tgts_list.append(thebatch[1]), skilltgt_list.append(thebatch[2])
-            skillnet_list.append(thebatch[3]), src_lens_list.append(thebatch[4]), tgt_lens_list.append(thebatch[5])
-            stgt_lens_list.append(thebatch[6]), snet_lens_list.append(thebatch[7])
-        return (srcs_list, tgts_list, skilltgt_list, skillnet_list, src_lens_list,
-                tgt_lens_list, stgt_lens_list, snet_lens_list)
+            all_batches.append(self.make_batch(batch_data))
+        return all_batches
 
     @staticmethod
     def make_batch(batch_data):
@@ -86,7 +82,7 @@ class DataCenter(object):
 
         for idx in range(bs):
             srcs[idx].extend([1 for _ in range(max_src_len - src_lens[idx])])
-            tgts[idx].extend([1 for _ in range(max_tgt_len - src_lens[idx])])
+            tgts[idx].extend([1 for _ in range(max_tgt_len - tgt_lens[idx])])
             skilltgt[idx].extend([0 for _ in range(max_skilltgt_len - skill_tgt_lens[idx])])
             skillnet[idx].extend([0 for _ in range(500 - skill_net_lens[idx])])
 
