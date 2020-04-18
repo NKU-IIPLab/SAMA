@@ -10,6 +10,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from model.sama import SAMA
 from basic.utils import around, dataPreprocess, vocab, globalVocab
 from tqdm import tqdm
+# from apex import amp
 
 
 seed = 50   # set seed for reproduction
@@ -37,8 +38,9 @@ def parse_args():
     parser.add_argument("--dropout", help="the dropout rate", type=float, default=0.3)
     parser.add_argument("--device", type=int, default=1)
     parser.add_argument("--max_len_skill", type=int, default=30)
+    parser.add_argument("--skill_len", type=int, default=500)
     parser.add_argument("--max_len_req", type=int, default=150)
-    parser.add_argument("--lambda", type=float, default=0.5)
+    parser.add_argument("--lam", type=float, default=0.5)
     parser.add_argument("--mu", type=float, default=1.4)
     config = parser.parse_args()
     return config
@@ -47,9 +49,9 @@ def parse_args():
 def main(args):
     dc = DataCenter(args)
     dc.load_dataset()
-    model = SAMA(dc, args)   # the model part
-    train_batches = dc.get_batches(getattr(dc, "trainset"))  # get all the batches for training
+    model = SAMA(dc, args).cuda(args.device)   # the model part
     optim = torch.optim.Adam(model.parameters(), lr=args.lr)
+    # model, optim = amp.initialize(model, optim, opt_level="O1")
     param_count = 0   # counting the parameters
     for param in model.parameters():
         param_count += param.view(-1).size()[0]
@@ -65,6 +67,8 @@ def main(args):
                 model.zero_grad()
                 t.set_description("EPOCH [{}]".format(e))
                 loss = model.loss(train_batch)
+                # with amp.scale_loss(loss, optim) as scaled_loss:
+                #     scaled_loss.backward()
                 loss.backward()
                 t.set_postfix(loss=loss.item())
                 optim.step()

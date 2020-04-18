@@ -35,12 +35,12 @@ class AttentionTwo(nn.Module):
         bs = dec_hidden.size(0)
         submm = func.linear(dec_hidden, self.w, None).view(bs, 1, self.config.worddim)
         attn = torch.bmm(submm, enc_hidden.transpose(2, 1))
-        mask = torch.ones((bs, 1, 500), dtype=torch.uint8)
+        mask = torch.ones((bs, 1, 500), dtype=torch.bool).to(self.config.device)
         for i in range(bs):
-            mask[i, :, :skillnet_lens[i]] = torch.zeros((1, 1, skillnet_lens[i]), dtype=torch.uint8)
+            mask[i, :, :skillnet_lens[i]] = torch.zeros((1, 1, skillnet_lens[i]), dtype=torch.bool)
         attn = attn.masked_fill(mask, -np.inf)
         attn = self.softmax(attn)
-        sumresult = torch.bmm(attn, enc_hidden).view(bs, self.encoderHiddenDim)
+        sumresult = torch.bmm(attn, enc_hidden).view(bs, self.config.worddim)
         return attn, sumresult
 
 
@@ -48,14 +48,14 @@ class AttentionFour(nn.Module):
     def __init__(self, config):
         super(AttentionFour, self).__init__()
         self.config = config
-        self.w = nn.Parameter(torch.zeros(config.worddim, config.hiddendim))
+        self.w = nn.Parameter(torch.zeros(config.worddim, config.hiddendim), requires_grad=True)
         init.xavier_uniform_(self.w)
         self.softmax = nn.Softmax(dim=2)
 
     def forward(self, dec_hidden, enc_hidden):
         bs = dec_hidden.size(0)
-        submm = func.linear(dec_hidden, self.w, None).view(bs, 1, self.encoderHiddendim)
+        submm = func.linear(dec_hidden, self.w, None).view(bs, 1, self.config.worddim)
         attn = torch.bmm(submm, enc_hidden.transpose(2, 1))
         attn = self.softmax(attn)
-        sumresult = torch.bmm(attn, enc_hidden).view(bs, self.encoderHiddendim)
+        sumresult = torch.bmm(attn, enc_hidden).view(bs, self.config.worddim)
         return attn, sumresult
