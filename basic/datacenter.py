@@ -50,15 +50,16 @@ class DataCenter(object):
                 emb[int(wordid), :] = uniform(-scale, scale, size=(self.config.worddim,)).astype('float32')
         return emb, ukn_count
 
-    def get_batches(self, dataset):
+    def get_batches(self, dataset, bs):
         """
         get all the batches for training and testing.
         :param dataset: trainset((trainset and devset)) or testset.
+        :param bs: the train/ test batch size.
         :return: all the batches (CPU device)
         """
         random.shuffle(dataset)
         all_batches = []
-        bs, datalen = self.config.batch_size, len(dataset)
+        datalen = len(dataset)
         batch_num = datalen // bs if datalen % bs == 0 else datalen // bs + 1
         for batch_id in range(batch_num):
             start = batch_id * bs

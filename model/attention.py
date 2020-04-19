@@ -36,8 +36,10 @@ class AttentionTwo(nn.Module):
         submm = func.linear(dec_hidden, self.w, None).view(bs, 1, self.config.worddim)
         attn = torch.bmm(submm, enc_hidden.transpose(2, 1))
         mask = torch.ones((bs, 1, 500), dtype=torch.bool).to(self.config.device)
+        # mask = torch.ones((bs, 1, 500), dtype=torch.uint8).to(self.config.device)
         for i in range(bs):
             mask[i, :, :skillnet_lens[i]] = torch.zeros((1, 1, skillnet_lens[i]), dtype=torch.bool)
+            # mask[i, :, :skillnet_lens[i]] = torch.zeros((1, 1, skillnet_lens[i]), dtype=torch.uint8)
         attn = attn.masked_fill(mask, -np.inf)
         attn = self.softmax(attn)
         sumresult = torch.bmm(attn, enc_hidden).view(bs, self.config.worddim)
