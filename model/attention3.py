@@ -3,10 +3,11 @@ import torch.nn as nn
 import torch.nn.init as init
 import torch.nn.functional as F
 
-class AttentionLayer(nn.Module):
+class AttentionLayer3(nn.Module):
     def __init__(self,data):
-        super(AttentionLayer, self).__init__()
-        self.encoderHiddendim = int(data.src_encoder_hidden_dim)
+        super(AttentionLayer3, self).__init__()
+        self.worddim = int(data.tgt_embedding_dim)
+        self.encoderHiddendim = self.worddim
         self.decoderHiddendim = int(data.src_encoder_hidden_dim)
         self.W = nn.Parameter(torch.Tensor(self.encoderHiddendim, self.decoderHiddendim))
         init.xavier_uniform_(self.W)

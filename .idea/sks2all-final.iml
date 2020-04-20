@@ -5,4 +5,11 @@
     <orderEntry type="jdk" jdkName="Remote Python 3.7.6 (sftp://rleating@192.168.129.119:22/home/rleating/sth/anaconda3/envs/torch120py376/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+  <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
+  </component>
+  <component name="TestRunnerService">
+    <option name="PROJECT_TEST_RUNNER" value="pytest" />
+  </component>
 </module>

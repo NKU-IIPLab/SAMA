@@ -3,10 +3,10 @@
   <component name="RemoteMappingsManager">
     <list>
       <list>
-        <remote-mappings server-id="python@sftp://rleating@192.168.129.117:22/home/rleating/anaconda3/bin/python">
+        <remote-mappings server-id="python@sftp://rleating@192.168.129.119:22/home/rleating/sth/anaconda3/bin/python">
           <settings>
             <list>
-              <mapping local-root="$PROJECT_DIR$" remote-root="/home/rleating/code/SAMA" />
+              <mapping local-root="$PROJECT_DIR$" remote-root="/tmp/origin_sama" />
             </list>
           </settings>
         </remote-mappings>
