@@ -25,15 +25,8 @@ def makeResult(data, tgtOutput, instance):
         gold_words.append([gold])
     return pred_words, gold_words
 
-def evaluate(data, model, type, path):
-    if type == "dev":
-        instances = data.dev_dataset
-    elif type == "test":
-        instances = data.test_dataset
-    else:
-        print("Error evaluate type!")
-        exit(0)
-
+def evaluate(data, model, path):
+    instances = data.test_dataset
     model.eval()
     print("evaluating ... ")
     batchSize = int(data.batch)
@@ -81,6 +74,6 @@ def evaluate(data, model, type, path):
     bleu_score_2 = corpus_bleu(gold_result, pred_result, weights=(0.5, 0.5, 0, 0))
     bleu_score_3 = corpus_bleu(gold_result, pred_result, weights=(0.33, 0.33, 0.33, 0))
     bleu_score_4 = corpus_bleu(gold_result, pred_result, weights=(0.25, 0.25, 0.25, 0.25))
-    print("decode_time: %.2fs, speed: %.2fst/s, bleu1: %f, bleu2: %f, bleu3: %f, bleu4: %f"
+    print("time: %.2fs, speed: %.2fst/s, bleu1: %f, bleu2: %f, bleu3: %f, bleu4: %f"
           % (decode_time, speed, bleu_score_1, bleu_score_2, bleu_score_3, bleu_score_4))
     return bleu_score_1, bleu_score_2, bleu_score_3, bleu_score_4

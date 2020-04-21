@@ -22,8 +22,8 @@ class sama(nn.Module):
         self.skilldicdim = len(data.gVocab.skilltgt_vocab.word2id)
 
         self.sktgtembed = nn.Embedding(self.skilldicdim, self.wordEmbeddingDim)
-        # if data.pretrain_tgt_embedding is not None:
-        #     self.sktgtembed.weight = nn.Parameter(torch.Tensor(data.pretrain_tgt_embedding))
+        if data.pretrain_tgt_embedding is not None:
+            self.sktgtembed.weight = nn.Parameter(torch.Tensor(data.pretrain_tgt_embedding))
         self.sktgtembed.weight.requires_grad = True
 
         self.tgtembed = nn.Embedding(self.worddicdim, self.wordEmbeddingDim)
@@ -39,7 +39,6 @@ class sama(nn.Module):
         self.encoderExtractor = data.src_encoder
         self.decoderHiddendim = int(data.src_encoder_hidden_dim)
         self.maxDecoderLength = int(data.max_decoder_len)
-        self.beamSearchSize = int(data.beamSearchSize)
 
         if self.encoderBidirectional:
             self.encoderHiddendim = self.encoderHiddendim // 2
@@ -214,7 +213,7 @@ class sama(nn.Module):
         skilldimIndexTensor = skillnet_tensor.view(-1)
         wordProbValue = topicfeature.view(-1)
         topicGenPro = topicGenPro.index_put_((batchIndexTensor, decoderIndexTensor, skilldimIndexTensor), wordProbValue)
-        generatePro = outPutFeature + self.topicGenLamda * topicGenPro / 100
+        generatePro = outPutFeature + self.topicGenLamda * topicGenPro
         return generatePro, skillOutFeature
 
     def mainforTest(self, src_tensor, src_lengths, skillnet_tensor, skill_net_lengths):
