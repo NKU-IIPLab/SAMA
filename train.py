@@ -51,7 +51,7 @@ def parse_args():
     parser.add_argument("--tgt_decoder", type=str, default="LSTM")
     parser.add_argument("--src_encoder_hidden_dim", type=int, default=400)
     parser.add_argument("--generatealpha", type=float, default=1.4)
-    parser.add_argument("--topicGenLamda", type=float, default=0.005)
+    parser.add_argument("--topicGenLamda", type=float, default=0.05)
     parser.add_argument("--max_skill_len", type=int, default=30)
     parser.add_argument("--skill_len", type=int, default=500)
     parser.add_argument("--device", type=int, default=0)
