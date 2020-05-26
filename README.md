@@ -32,5 +32,13 @@ the environment:
    python reproduce.py --file_dir SAMA/dataset    # just reproduce
    ```
 
-
+## data description
+src -- the text of job description  
+srcid -- the word id of job description  
+tgt -- the text of skill requirement  
+tgtid -- the word id of skill requirement  
+skillnet -- the recommed skill text of skill knowledge graph  
+skillnetid -- the recommed skill word id of skill knowledge graph  
+skilltgt -- the extracted skill text of skill requirement  
+skilltgtid -- the extracted skill word id of skill requirement  
 
