@@ -39,4 +39,5 @@ the environment:
 + skillnetid -- the recommed skill word id of skill knowledge graph  
 + skilltgt -- the extracted skill text of skill requirement  
 + skilltgtid -- the extracted skill word id of skill requirement  
-**The data is only for academic purposes.**
+
+### The data is only for academic purposes.
