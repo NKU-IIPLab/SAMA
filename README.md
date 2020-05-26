@@ -11,9 +11,12 @@ the environment:
 
   
 
-1. the trained model and data: https://pan.baidu.com/s/1C1Ov7tKXPsp46anGQ0M9hQ  6ie4
+1. the trained model and data: [[url](https://drive.google.com/open?id=15bQqsOTVZrVbi-ivxfiYAALHohYQnt6P)]
 
-   download the data and model.
+**数据仅限于学术目的，不可用于商业活动。The data is only for academic purposes.**
+
+   download the data and model.  
+
 
 2. ```bash
    unzip data_model.zip
