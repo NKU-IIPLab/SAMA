@@ -13,8 +13,6 @@ the environment:
 
 1. the trained model and data: [[url](https://drive.google.com/open?id=15bQqsOTVZrVbi-ivxfiYAALHohYQnt6P)]
 
-**数据仅限于学术目的，不可用于商业活动。The data is only for academic purposes.**
-
    download the data and model.  
 
 
@@ -41,4 +39,4 @@ the environment:
 + skillnetid -- the recommed skill word id of skill knowledge graph  
 + skilltgt -- the extracted skill text of skill requirement  
 + skilltgtid -- the extracted skill word id of skill requirement  
-
+**The data is only for academic purposes.**
